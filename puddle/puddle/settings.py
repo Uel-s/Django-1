@@ -1,28 +1,22 @@
 import dj_database_url
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-j)ptt-yvzh!!fk*04r2j&(*l)xodexiw(t+!c5xkotmo02!8(*'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = []
-
-LOGIN_URL = "/login/" # unauthorized persons redirect to login.
-LOGIN_REDIRECT_URL = "/" # redirect to front page when logged in.
-LOGOUT_REDIRECT_URL = "/" # redirect to front page when logged in.
-
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split()
+LOGIN_URL = "/login/"  # Unauthorized users redirect to login.
+LOGIN_REDIRECT_URL = "/"  # Redirect to front page when logged in.
+LOGOUT_REDIRECT_URL = "/"  # Redirect to front page when logged out.
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -33,7 +27,7 @@ INSTALLED_APPS = [
     'conversation',
     'core',
     'dashboard',
-    "item", 
+    'item',
 ]
 
 MIDDLEWARE = [
@@ -66,10 +60,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'puddle.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
+# Database Configuration
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -77,11 +68,15 @@ DATABASES = {
     }
 }
 
-DATABASES["default"] = dj_database_url.parse("postgresql://puddle_nail_user:1HqmrK2b2n6a5Legef7VTBBgsofcQfOi@dpg-cuumb51opnds73egqshg-a.frankfurt-postgres.render.com/puddle_nail")
+# Load database URL from environment variable if available
+database_url = os.environ.get("DATABASE_URL")
+
+if database_url:
+    DATABASES["default"] = dj_database_url.parse(database_url)
+else:
+    print("Warning: DATABASE_URL not set. Using SQLite instead.")
 
 # Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -97,30 +92,19 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
-# https://docs.djangoproject.com/en/3.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-
 STATIC_URL = '/static/'
-# Configurations for adding image
-MEDIA_URL = 'media/'
-MEDIA_ROOT= BASE_DIR / 'media'
+
+# Configurations for adding images
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
