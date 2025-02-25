@@ -6,12 +6,12 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY" "Gb5VXYQqo2dTqla3IJMmJXKJhyr")
+SECRET_KEY = os.environ.get("SECRET_KEY" )
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split()
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 LOGIN_URL = "/login/"  # Unauthorized users redirect to login.
 LOGIN_REDIRECT_URL = "/"  # Redirect to front page when logged in.
 LOGOUT_REDIRECT_URL = "/"  # Redirect to front page when logged out.
